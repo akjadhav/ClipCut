@@ -58,46 +58,43 @@ const HomeRoute = () => {
 
   const handleRecord = async () => {
     if (recording) {
-      // Stop the recording
+      // Stopping the mediaRecorder
       mediaRecorderRef.current.stop();
-    } else {
-      // Start the live video stream and recording
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
+
+      // Stopping each track in the stream
+      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+
+      setRecording(false);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
       mediaRecorderRef.current = new MediaRecorder(stream);
-
-      // Array to hold the recorded chunks
-      const localChunks = [];
+      let chunks = []; // Array to store recorded video data
 
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          localChunks.push(event.data);
+          chunks.push(event.data);
         }
       };
 
       mediaRecorderRef.current.onstop = () => {
-        // Convert the recorded chunks into a blob
-        const blob = new Blob(localChunks, { type: 'video/webm' });
-
-        // Stop the live stream from the camera
-        const stream = videoRef.current.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-
-        // Set the video source to the recorded video to allow playback
-        videoRef.current.srcObject = null;
+        // Convert recorded chunks to a single blob
+        const blob = new Blob(chunks, { type: 'video/webm' });
         videoRef.current.src = URL.createObjectURL(blob);
-        videoRef.current.loop = true; // optional: if you want the video to loop
-
-        setVideo(blob); // Save the recorded video blob
+        chunks = []; // Clear the chunks for next recording
       };
+
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
 
       mediaRecorderRef.current.start();
       setRecording(true);
+    } catch (error) {
+      console.error('Error acquiring media stream:', error);
     }
   };
 
