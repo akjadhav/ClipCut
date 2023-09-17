@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 
+import ContainerForToast from '../../components/toast/toast.component';
 import { TOAST_PROPS } from '../../components/toast/toast.settings';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -152,6 +153,8 @@ const HomeRoute = () => {
   return (
     <>
       <div className='app-container'>
+        <ContainerForToast />
+
         <h1 className='product-title'>ClipCut</h1>
 
         <div className='video-upload-container'>
