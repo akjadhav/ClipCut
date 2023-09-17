@@ -1,4 +1,4 @@
-# Our Story
+# ClipCut
 
 ## Inspiration
 
