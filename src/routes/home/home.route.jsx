@@ -260,7 +260,9 @@ const HomeRoute = ({ showModal, setShowModal }) => {
                   {/* <p>{video.name}</p> */}
                 </>
               ) : (
-                <>Drag & Drop or Click to Upload</>
+                <>
+                  Drag & Drop <br /> OR <br /> Click to Upload
+                </>
               )}
 
               <input
