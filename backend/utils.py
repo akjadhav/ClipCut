@@ -78,7 +78,7 @@ def save_transcript(transcript, name):
         file.write(json_object)
 
 
-def main(uploaded_video_path):
+def transcribe(uploaded_video_path):
     for clip in os.listdir(uploaded_video_path):
         name, ext = uploaded_video_path.split('.')
 

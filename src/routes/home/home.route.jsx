@@ -40,7 +40,7 @@ const HomeRoute = () => {
         method: 'POST',
         body: formData,
       });
-
+      console.log(uploadResponse);
       if (uploadResponse.ok) {
         toast.update(promiseToastForUpload, {
           ...TOAST_PROPS,
@@ -57,18 +57,25 @@ const HomeRoute = () => {
         const processResponse = await fetch(
           'http://127.0.0.1:8000/processfile/',
           {
-            method: 'POST',
+            method: 'GET',
             body: uploadResponse.content.filename,
           }
         );
 
-        if (processResponse.ok) {
+        if (processResponse.status === 201) {
           toast.update(promiseToastForProcess, {
             ...TOAST_PROPS,
             render: 'Video processed!',
             type: 'success',
             isLoading: false,
           });
+          const transcribeFiles = await fetch(
+            'http://127.0.0.1:8000/transcribefiles/',
+            {
+              method: 'GET',
+              body: processResponse.content.foldername,
+            }
+          );
         }
       } else {
         toast.update(promiseToastForUpload, {

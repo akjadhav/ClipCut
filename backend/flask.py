@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import FastAPI, File, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from test_scene import process_file
+from utils import transcribe
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
@@ -40,5 +41,10 @@ async def create_upload_file(file: UploadFile):
 
 @app.get("/processfile/")
 async def process_file(file_name: str):
+    folder_name = process_file(file_name)
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"foldername": folder_name})
+
+@app.get("/transcribefile/")
+async def process_file(file_name: str):
     process_file(file_name)
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"filename": file_name})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"filename": file_name})
