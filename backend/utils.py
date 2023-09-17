@@ -72,10 +72,10 @@ def get_video_transcript(video_path):
 
 
 def save_transcript(transcript, name):
-    json_object = json.dumps(transcript, indent=4)
-
-    with open(name+'.json', 'w') as file:
-        file.write(json_object)
+    obj = transcript['text']
+    file_path = os.path.join("uploads", name+'.txt')
+    with open(file_path, 'w') as file:
+        file.write(obj)
 
 
 def transcribe(uploaded_video_path):
