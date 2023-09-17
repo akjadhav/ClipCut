@@ -1,27 +1,24 @@
 import cv2 
+import openai
+from moviepy.editor import VideoFileClip
 import os
-from google.cloud import storage
+import json
 
+#openai.api_key_path = 'PATH'
+openai.api_key = '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'
 
-def upload_video(file_path_to_upload):
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\Chaitanya\HackMIT\project"
+#NOT USED
+def upload_video_google(file_path_to_upload):
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "PATH/TO/KEY"
     client = storage.Client()
 
     bucket_name = "hackmit-videos"
     source_file_name = file_path_to_upload
-    destination_blob_name = "destination/blob/name"
+    destination_blob_name = ""
 
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(source_file_name)
-
-
-def download_video():
-    pass
-
-def capture_video():
-    pass
-
 def split_on_timestamp(video, start_time, end_time):
 
     # Open the video file
@@ -62,5 +59,37 @@ def split_on_timestamp(video, start_time, end_time):
     return out
 
 
-if __name__ == "__main__":
-    pass
+def convert_video_to_audio_moviepy(video_file, output_ext="mp3"):
+    filename, ext = os.path.splitext(video_file)
+    clip = VideoFileClip(video_file)
+    clip.audio.write_audiofile(f"{filename}.{output_ext}")
+    return filename+'.'+output_ext
+
+
+def get_video_transcript(video_path):
+    audio_file= open(video_path, "rb")
+    transcript = openai.Audio.transcribe("whisper-1", audio_file)
+    return transcript
+
+
+def save_transcript(transcript, name):
+    json_object = json.dumps(transcript, indent=4)
+
+    with open(name+'.json', 'w') as file:
+        file.write(json_object)
+
+
+def main(uploaded_video_path):
+    for clip in os.listdir(uploaded_video_path):
+        name, ext = uploaded_video_path.split('.')
+
+        if ext not in ['mov, mp4']:
+            print("Not Valid Video Type")
+            exit()
+        
+        path_to_audio = convert_video_to_audio_moviepy(clip)
+        transcript = get_video_transcript(path_to_audio)
+
+        save_transcript(transcript, name)
+
+        
