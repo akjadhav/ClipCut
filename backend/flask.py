@@ -34,11 +34,11 @@ async def create_upload_file(file: UploadFile):
     return {"filename": file.filename}
 
 @app.get("/processfile/", status_code=201)
-async def process_file(file_name: str):
-    folder_name = process_file(file_name)
+async def process_file_func(file_name: str):
+    folder_name = await process_file(file_name)
     return {"foldername": folder_name}
 
 @app.get("/transcribefile/")
-async def process_file(file_name: str):
-    process_file(file_name)
+async def transcribe_file(file_name: str):
+    transcribe(file_name)
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": "Transcription process started"})
