@@ -11,6 +11,7 @@ pyvenv.cfg
 *.mp4
 *.mp3
 *.json
+*.txt
 
 __pycache__/
 backend/gpt-api-key.txt
