@@ -38,7 +38,7 @@ async def create_upload_file(file: UploadFile):
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"filename": file.filename})
 
-@app.get("/process_file")
+@app.get("/processfile/")
 async def process_file(file_name: str):
     process_file(file_name)
     return JSONResponse(status_code=status.HTTP_200_OK, content={"filename": file_name})

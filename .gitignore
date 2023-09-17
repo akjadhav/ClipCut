@@ -6,6 +6,7 @@ bin/
 lib/
 pyvenv.cfg
 
+*.avi
 *.mov
 *.mp4
 
