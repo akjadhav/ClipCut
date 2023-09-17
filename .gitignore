@@ -12,6 +12,7 @@ pyvenv.cfg
 *.mp3
 *.json
 *.txt
+*.zip
 
 __pycache__/
 backend/gpt-api-key.txt
