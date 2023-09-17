@@ -100,7 +100,7 @@ def get_sentiment(text):
         engine="text-davinci-002",
         prompt=f"Sentiment analysis of the following text, in one word:\n{text}\n",
         temperature=0.5,
-        max_tokens=2,
+        max_tokens=5,
     )
     sentiment = response.choices[0].text.strip()
     return sentiment
