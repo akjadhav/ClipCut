@@ -72,10 +72,10 @@ def get_video_transcript(video_path):
 
 
 def save_transcript(transcript, name):
-    obj = transcript['text']
+    json_object = json.dumps(transcript, indent=4)
     file_path = os.path.join("uploads", name+'.txt')
     with open(file_path, 'w') as file:
-        file.write(obj)
+        file.write(json_object)
 
 
 def transcribe(uploaded_video_path):
@@ -90,7 +90,8 @@ def transcribe(uploaded_video_path):
             video_path = os.path.join(uploads_dir, file_name)
             path_to_audio = convert_video_to_audio_moviepy(video_path)
             transcript = get_video_transcript(path_to_audio)
-
+            sentiment = get_sentiment(transcript['text'])
+            transcript['sentiment'] = sentiment
             save_transcript(transcript, name)
 
 

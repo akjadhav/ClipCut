@@ -54,16 +54,6 @@ async def transcribe_files():
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": "Transcription process started"})
 
-@app.get('/addsentiment')
-async def add_sentiment():
-    text = "" # get text from txt
-    try:
-        sentiment = get_sentiment(text)
-        # 
-        
-    except Exception as e:
-        return e
-
 @app.get("/download/")
 async def download_files():
     upload_folder = "uploads"
