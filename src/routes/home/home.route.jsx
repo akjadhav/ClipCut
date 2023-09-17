@@ -1,107 +1,146 @@
-import { useState, useRef } from "react";
-import "./home.styles.scss";
+import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+
+import { TOAST_PROPS } from '../../components/toast/toast.settings';
+
+import 'react-toastify/dist/ReactToastify.css';
+import './home.styles.scss';
 
 const HomeRoute = () => {
-    const [video, setVideo] = useState(null);
-    const [highlight, setHighlight] = useState(false);
-    const [activeTab, setActiveTab] = useState("upload"); // Possible values: 'upload', 'record'
-    const [recording, setRecording] = useState(false);
-    const videoRef = useRef(null);
-    const mediaRecorderRef = useRef(null);
+  const [video, setVideo] = useState(null);
+  const [highlight, setHighlight] = useState(false);
+  const [activeTab, setActiveTab] = useState('upload'); // Possible values: 'upload', 'record'
+  const [recording, setRecording] = useState(false);
+  const videoRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
 
-    const handleVideoChange = (e) => {
-        const file = e.target.files[0] || e.dataTransfer.files[0];
-        if (file && file.type.startsWith("video/")) {
-            setVideo(file);
-        } else {
-            alert("Please upload a valid video file");
-            setVideo(null);
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0] || e.dataTransfer.files[0];
+    if (file && file.type.startsWith('video/')) {
+      setVideo(file);
+    } else {
+      alert('Please upload a valid video file');
+      setVideo(null);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!video) return;
+
+    const formData = new FormData();
+    formData.append('file', video);
+
+    try {
+      const promiseToastForUpload = toast.loading(
+        'Uploading video...',
+        TOAST_PROPS
+      );
+
+      const uploadResponse = await fetch('http://127.0.0.1:8000/uploadfile/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (uploadResponse.ok) {
+        toast.update(promiseToastForUpload, {
+          ...TOAST_PROPS,
+          render: 'Video uploaded successfully',
+          type: 'success',
+          isLoading: false,
+        });
+
+        const promiseToastForProcess = toast.loading(
+          'Processing video...',
+          TOAST_PROPS
+        );
+
+        const processResponse = await fetch(
+          'http://127.0.0.1:8000/processfile/',
+          {
+            method: 'POST',
+            body: uploadResponse.content.filename,
+          }
+        );
+
+        if (processResponse.ok) {
+          toast.update(promiseToastForProcess, {
+            ...TOAST_PROPS,
+            render: 'Video processed!',
+            type: 'success',
+            isLoading: false,
+          });
         }
-    };
+      } else {
+        toast.update(promiseToastForUpload, {
+          ...TOAST_PROPS,
+          render: 'Video could not be uploaded',
+          type: 'error',
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      toast.error('Error: ' + error, TOAST_PROPS);
+    }
+  };
 
-    const handleSubmit = async () => {
-        if (!video) return;
+  const onDragOver = (e) => {
+    e.preventDefault();
+    setHighlight(true);
+  };
 
-        const formData = new FormData();
-        formData.append("file", video);
+  const onDragLeave = () => {
+    setHighlight(false);
+  };
 
-        try {
-            const response = await fetch("http://127.0.0.1:8000/uploadfile/", {
-                withCredentials: true,
-                method: "POST",
-                body: formData,
-            });
+  const onDrop = (e) => {
+    e.preventDefault();
+    handleVideoChange(e);
+    setHighlight(false);
+  };
 
-            if (response.ok) {
-                alert("Video uploaded successfully");
-            } else {
-                alert("Error uploading video");
-            }
-        } catch (error) {
-            alert("Error: " + error);
+  const handleRecord = async () => {
+    if (recording) {
+      // Stopping the mediaRecorder
+      mediaRecorderRef.current.stop();
+
+      // Stopping each track in the stream
+      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+
+      setRecording(false);
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      let chunks = []; // Array to store recorded video data
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
         }
-    };
+      };
 
-    const onDragOver = (e) => {
-        e.preventDefault();
-        setHighlight(true);
-    };
+      mediaRecorderRef.current.onstop = () => {
+        // Convert recorded chunks to a single blob
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        videoRef.current.src = URL.createObjectURL(blob);
+        chunks = []; // Clear the chunks for next recording
+      };
 
-    const onDragLeave = () => {
-        setHighlight(false);
-    };
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
 
-    const onDrop = (e) => {
-        e.preventDefault();
-        handleVideoChange(e);
-        setHighlight(false);
-    };
-
-    const handleRecord = async () => {
-        if (recording) {
-            // Stopping the mediaRecorder
-            mediaRecorderRef.current.stop();
-
-            // Stopping each track in the stream
-            videoRef.current.srcObject
-                .getTracks()
-                .forEach((track) => track.stop());
-            videoRef.current.srcObject = null;
-
-            setRecording(false);
-            return;
-        }
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-            });
-
-            mediaRecorderRef.current = new MediaRecorder(stream);
-            let chunks = []; // Array to store recorded video data
-
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    chunks.push(event.data);
-                }
-            };
-
-            mediaRecorderRef.current.onstop = () => {
-                // Convert recorded chunks to a single blob
-                const blob = new Blob(chunks, { type: "video/webm" });
-                videoRef.current.src = URL.createObjectURL(blob);
-                chunks = []; // Clear the chunks for next recording
-            };
-
-            videoRef.current.srcObject = stream;
-            videoRef.current.play();
-
-            mediaRecorderRef.current.start();
-            setRecording(true);
-        } catch (error) {
-            console.error("Error acquiring media stream:", error);
-        }
-    };
+      mediaRecorderRef.current.start();
+      setRecording(true);
+    } catch (error) {
+      console.error('Error acquiring media stream:', error);
+    }
+  };
 
   return (
     <>
