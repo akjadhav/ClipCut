@@ -9,6 +9,8 @@ pyvenv.cfg
 *.avi
 *.mov
 *.mp4
+*.mp3
+*.json
 
 __pycache__/
 backend/gpt-api-key.txt
