@@ -1,24 +1,44 @@
-from flask import Flask, request, jsonify
-from flask_uploads import UploadSet, configure_uploads, patch_request_class, VIDEOS
+from typing import Annotated
 
-app = Flask(__name__)
+from fastapi import FastAPI, File, UploadFile, status
+from fastapi.middleware.cors import CORSMiddleware
+from test_scene import process_file
+from fastapi.responses import JSONResponse
 
-# Configuration for uploaded videos
-app.config['UPLOADED_VIDEOS_DEST'] = 'uploads/videos'  # specify the folder 'uploads/videos'
+app = FastAPI()
 
-videos = UploadSet('videos', VIDEOS)
-configure_uploads(app, videos)
+origins = [
+    "*"
+]
 
-# Set a maximum file size, e.g. 100MB
-patch_request_class(app, 100 * 1024 * 1024)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.route('/YOUR_BACKEND_ENDPOINT', methods=['POST'])
-def upload_video():
-    if 'video' in request.files:
-        filename = videos.save(request.files['video'])
-        return jsonify(success=True, message="Video uploaded!", filename=filename)
-    else:
-        return jsonify(success=False, message="Video upload failed!")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.post("/files/")
+async def create_file(file: Annotated[bytes, File()]):
+    return {"file_size": len(file)}
+
+
+@app.post("/uploadfile/", status_code=200)
+async def create_upload_file(file: UploadFile):
+    try:
+        with open(file.filename, 'wb') as f:
+            while contents := file.file.read(1024 * 1024):
+                f.write(contents)
+    except Exception:
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"message": "There was an error uploading the file"})
+    finally:
+        file.file.close()
+
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"filename": file.filename})
+
+@app.get("/process_file")
+async def process_file(file_name: str):
+    process_file(file_name)
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"filename": file_name})

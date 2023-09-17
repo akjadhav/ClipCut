@@ -8,3 +8,5 @@ pyvenv.cfg
 
 *.mov
 *.mp4
+
+__pycache__/
