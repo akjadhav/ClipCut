@@ -195,15 +195,17 @@ const HomeRoute = ({ showModal, setShowModal }) => {
         videoRef.current.src = URL.createObjectURL(blob);
         chunks = []; // Clear the chunks for next recording
 
-        const recordedFile = new File([blob], 'recordedVideo.webm', {
-          type: 'video/webm',
-          lastModified: new Date(),
-        });
+        toast.info('Video is already processed...', TOAST_PROPS);
 
-        const formData = new FormData();
-        formData.append('file', recordedFile);
+        // const recordedFile = new File([blob], 'recordedVideo.webm', {
+        //   type: 'video/webm',
+        //   lastModified: new Date(),
+        // });
 
-        handleUpload(formData);
+        // const formData = new FormData();
+        // formData.append('file', recordedFile);
+
+        // handleUpload(formData);
       };
 
       videoRef.current.srcObject = stream;
