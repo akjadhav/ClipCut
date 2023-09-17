@@ -4,9 +4,10 @@ from fastapi import FastAPI, File, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from test_scene import process_file
 from utils import transcribe
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 import os
 import shutil
+import zipfile
 
 app = FastAPI()
 
@@ -52,3 +53,12 @@ async def transcribe_files():
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"message": f"There was an error transcribing the file: {str(e)}"})
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": "Transcription process started"})
+
+@app.get("/download/")
+async def download_files():
+    upload_folder = "uploads"
+    if os.path.exists(upload_folder+'.zip'):
+        os.remove(upload_folder+'.zip')
+    with zipfile.ZipFile(upload_folder+'.zip', 'w') as my_zip:
+        my_zip.write(upload_folder)
+    return FileResponse(upload_folder+'.zip', media_type='application/zip', filename='processed.zip')
