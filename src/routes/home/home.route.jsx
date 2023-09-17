@@ -63,20 +63,27 @@ const HomeRoute = () => {
           }
         );
 
-        if (processResponse.status === 201) {
+        if (processResponse.ok) {
           toast.update(promiseToastForProcess, {
             ...TOAST_PROPS,
             render: 'Video processed!',
             type: 'success',
             isLoading: false,
           });
-          const transcribeFiles = await fetch(
+          const transcribeFilesResponse = await fetch(
             'http://127.0.0.1:8000/transcribefiles/',
             {
               method: 'GET',
               body: processResponse.content.foldername,
             }
           );
+        } else {
+          toast.update(promiseToastForProcess, {
+            ...TOAST_PROPS,
+            render: 'Video could not be processed',
+            type: 'error',
+            isLoading: false,
+          });
         }
       } else {
         toast.update(promiseToastForUpload, {
