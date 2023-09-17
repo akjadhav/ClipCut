@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
+import { Form, Button, Modal } from 'react-bootstrap';
 
 import ContainerForToast from '../../components/toast/toast.component';
 import { TOAST_PROPS } from '../../components/toast/toast.settings';
@@ -12,13 +13,15 @@ const HomeRoute = ({ showModal, setShowModal }) => {
   const [highlight, setHighlight] = useState(false);
   const [activeTab, setActiveTab] = useState('upload'); // Possible values: 'upload', 'record'
   const [recording, setRecording] = useState(false);
+  const [showModal, setShowModal] = useState(true);
+
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
 
-  const handleVideoChange = (e) => {
+  const handleVideoChange = async (e) => {
     const file = e.target.files[0] || e.dataTransfer.files[0];
     if (file && file.type.startsWith('video/')) {
-      setVideo(file);
+      setVideo(file); // Set the video state to the File object
     } else {
       alert('Please upload a valid video file');
       setVideo(null);
@@ -41,8 +44,9 @@ const HomeRoute = ({ showModal, setShowModal }) => {
         method: 'POST',
         body: formData,
       });
-      console.log(uploadResponse);
+
       if (uploadResponse.ok) {
+        const uploadData = await uploadResponse.json(); // Parse the JSON response
         toast.update(promiseToastForUpload, {
           ...TOAST_PROPS,
           render: 'Video uploaded successfully',
@@ -56,27 +60,39 @@ const HomeRoute = ({ showModal, setShowModal }) => {
         );
 
         const processResponse = await fetch(
-          'http://127.0.0.1:8000/processfile/',
+          `http://127.0.0.1:8000/processfile/?file_name=${uploadData.filename}`, // Use uploadData.filename
           {
             method: 'GET',
-            body: uploadResponse.content.filename,
           }
         );
 
         if (processResponse.ok) {
-          toast.update(promiseToastForProcess, {
-            ...TOAST_PROPS,
-            render: 'Video processed!',
-            type: 'success',
-            isLoading: false,
-          });
+          const processData = await processResponse.json();
+
           const transcribeFilesResponse = await fetch(
-            'http://127.0.0.1:8000/transcribefiles/',
+            `http://127.0.0.1:8000/transcribefiles/`,
             {
               method: 'GET',
-              body: processResponse.content.foldername,
             }
           );
+
+          if (transcribeFilesResponse.ok) {
+            toast.update(promiseToastForProcess, {
+              ...TOAST_PROPS,
+              render: 'Video processed!',
+              type: 'success',
+              isLoading: false,
+            });
+
+            setShowModal(true);
+          } else {
+            toast.update(promiseToastForProcess, {
+              ...TOAST_PROPS,
+              render: 'Video could not be processed',
+              type: 'error',
+              isLoading: false,
+            });
+          }
         } else {
           toast.update(promiseToastForProcess, {
             ...TOAST_PROPS,

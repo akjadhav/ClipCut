@@ -1,4 +1,4 @@
-import cv2 
+import cv2
 import openai
 from moviepy.editor import VideoFileClip
 import os
@@ -79,16 +79,17 @@ def save_transcript(transcript, name):
 
 
 def transcribe(uploaded_video_path):
-    for clip in os.listdir(uploaded_video_path):
-        name, ext = uploaded_video_path.split('.')
+    uploads_dir = "uploads"
+    for file_name in os.listdir(uploads_dir):
+        if "Scene" in file_name:
+            name, ext = os.path.splitext(file_name)
 
-        if ext not in ['mov, mp4']:
-            print("Not Valid Video Type")
-            exit()
-        
-        path_to_audio = convert_video_to_audio_moviepy(clip)
-        transcript = get_video_transcript(path_to_audio)
+            if ext not in ['.mov', '.mp4']:
+                raise Exception(f"Invalid Video Type: {ext}")
 
-        save_transcript(transcript, name)
+            video_path = os.path.join(uploads_dir, file_name)
+            path_to_audio = convert_video_to_audio_moviepy(video_path)
+            transcript = get_video_transcript(path_to_audio)
 
-        
+            save_transcript(transcript, name)
+
