@@ -41,8 +41,9 @@ const HomeRoute = () => {
         method: 'POST',
         body: formData,
       });
-      console.log(uploadResponse);
+
       if (uploadResponse.ok) {
+        const uploadData = await uploadResponse.json(); // Parse the JSON response
         toast.update(promiseToastForUpload, {
           ...TOAST_PROPS,
           render: 'Video uploaded successfully',
@@ -56,7 +57,7 @@ const HomeRoute = () => {
         );
 
         const processResponse = await fetch(
-          `http://127.0.0.1:8000/processfile/?file_name=${uploadResponse.filename}`,
+          `http://127.0.0.1:8000/processfile/?file_name=${uploadData.filename}`, // Use uploadData.filename
           {
             method: 'GET',
           }

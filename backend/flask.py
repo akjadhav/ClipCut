@@ -41,4 +41,4 @@ async def process_file(file_name: str):
 @app.get("/transcribefile/")
 async def process_file(file_name: str):
     process_file(file_name)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"filename": file_name})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": "Transcription process started"})
