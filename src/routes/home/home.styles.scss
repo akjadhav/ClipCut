@@ -12,15 +12,9 @@
     top: 50px; // You can adjust this to place the title as desired
     font-size: 2em;
     color: #fff;
-    background-color: rgba(
-      0,
-      0,
-      0,
-      0.6
-    ); // Making it slightly transparent to maintain contrast
     padding: 10px 20px;
     border-radius: 5px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    filter: drop-shadow(0 0 1rem crimson);
     z-index: 1; // Ensuring it floats above the rest of the content
   }
 

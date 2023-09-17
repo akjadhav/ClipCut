@@ -124,7 +124,26 @@ const HomeRoute = () => {
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}>
-                Drag & Drop or Click to Upload
+                {video ? (
+                  <>
+                    {/* Displaying the video itself */}
+                    <video
+                      width='320'
+                      height='240'
+                      controls>
+                      <source
+                        src={URL.createObjectURL(video)}
+                        type='video/mp4'
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                    {/* Displaying the video name if you'd prefer that */}
+                    {/* <p>{video.name}</p> */}
+                  </>
+                ) : (
+                  <>Drag & Drop or Click to Upload</>
+                )}
+
                 <input
                   type='file'
                   accept='video/*'
