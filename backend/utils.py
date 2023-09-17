@@ -103,5 +103,4 @@ def get_sentiment(text):
         max_tokens=2,
     )
     sentiment = response.choices[0].text.strip()
-    print(sentiment)
     return sentiment
