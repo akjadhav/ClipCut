@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import DownloadModal from './components/download-modal/download-modal.component';
-
 import HomeRoute from './routes/home/home.route';
+
+import DownloadModal from './components/download-modal/download-modal.component';
 
 import './App.css';
 

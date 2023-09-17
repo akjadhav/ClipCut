@@ -13,7 +13,6 @@ const HomeRoute = ({ showModal, setShowModal }) => {
   const [highlight, setHighlight] = useState(false);
   const [activeTab, setActiveTab] = useState('upload'); // Possible values: 'upload', 'record'
   const [recording, setRecording] = useState(false);
-  const [showModal, setShowModal] = useState(true);
 
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
