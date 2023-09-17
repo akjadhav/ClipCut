@@ -12,3 +12,4 @@ pyvenv.cfg
 
 __pycache__/
 backend/gpt-api-key.txt
+.env

@@ -15,10 +15,10 @@ const HomeRoute = () => {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
 
-  const handleVideoChange = (e) => {
+  const handleVideoChange = async (e) => {
     const file = e.target.files[0] || e.dataTransfer.files[0];
     if (file && file.type.startsWith('video/')) {
-      setVideo(file);
+      setVideo(file); // Set the video state to the File object
     } else {
       alert('Please upload a valid video file');
       setVideo(null);
@@ -56,10 +56,9 @@ const HomeRoute = () => {
         );
 
         const processResponse = await fetch(
-          'http://127.0.0.1:8000/processfile/',
+          `http://127.0.0.1:8000/processfile/?file_name=${uploadResponse.filename}`,
           {
             method: 'GET',
-            body: uploadResponse.content.filename,
           }
         );
 
@@ -71,10 +70,9 @@ const HomeRoute = () => {
             isLoading: false,
           });
           const transcribeFilesResponse = await fetch(
-            'http://127.0.0.1:8000/transcribefiles/',
+            `http://127.0.0.1:8000/transcribefiles/?foldername=${processResponse.foldername}`,
             {
               method: 'GET',
-              body: processResponse.content.foldername,
             }
           );
         } else {

@@ -20,13 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.post("/files/")
-async def create_file(file: Annotated[bytes, File()]):
-    return {"file_size": len(file)}
-
-
-@app.post("/uploadfile/", status_code=200)
+@app.post("/uploadfile/", status_code=201)
 async def create_upload_file(file: UploadFile):
     try:
         with open(file.filename, 'wb') as f:
@@ -37,12 +31,12 @@ async def create_upload_file(file: UploadFile):
     finally:
         file.file.close()
 
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"filename": file.filename})
+    return {"filename": file.filename}
 
-@app.get("/processfile/")
+@app.get("/processfile/", status_code=201)
 async def process_file(file_name: str):
     folder_name = process_file(file_name)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content={"foldername": folder_name})
+    return {"foldername": folder_name}
 
 @app.get("/transcribefile/")
 async def process_file(file_name: str):
