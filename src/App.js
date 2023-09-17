@@ -12,10 +12,10 @@ function App() {
   return (
     <div className='App'>
       <header className='App-header'>
-        <DownloadModal
+        {/* <DownloadModal
           showModal={showDownloadModal}
           setShowModal={setShowDownloadModal}
-        />
+        /> */}
         <HomeRoute
           showModal={showDownloadModal}
           setShowModal={setShowDownloadModal}

@@ -57,8 +57,15 @@ async def transcribe_files():
 @app.get("/download/")
 async def download_files():
     upload_folder = "uploads"
-    if os.path.exists(upload_folder+'.zip'):
-        os.remove(upload_folder+'.zip')
-    with zipfile.ZipFile(upload_folder+'.zip', 'w') as my_zip:
-        my_zip.write(upload_folder)
-    return FileResponse(upload_folder+'.zip', media_type='application/zip', filename='processed.zip')
+    zip_file_path = upload_folder + '.zip'
+    
+    if os.path.exists(zip_file_path):
+        os.remove(zip_file_path)
+    
+    with zipfile.ZipFile(zip_file_path, 'w') as my_zip:
+        for foldername, subfolders, filenames in os.walk(upload_folder):
+            for filename in filenames:
+                file_path = os.path.join(foldername, filename)
+                my_zip.write(file_path, os.path.relpath(file_path, upload_folder))
+
+    return FileResponse(zip_file_path, media_type='application/zip', filename='processed.zip')

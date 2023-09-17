@@ -22,17 +22,12 @@ const HomeRoute = ({ showModal, setShowModal }) => {
     if (file && file.type.startsWith('video/')) {
       setVideo(file); // Set the video state to the File object
     } else {
-      alert('Please upload a valid video file');
+      toast.error('Please upload a valid video file', TOAST_PROPS);
       setVideo(null);
     }
   };
 
-  const handleSubmit = async () => {
-    if (!video) return;
-
-    const formData = new FormData();
-    formData.append('file', video);
-
+  const handleUpload = async (video_file) => {
     try {
       const promiseToastForUpload = toast.loading(
         'Uploading video...',
@@ -41,7 +36,7 @@ const HomeRoute = ({ showModal, setShowModal }) => {
 
       const uploadResponse = await fetch('http://127.0.0.1:8000/uploadfile/', {
         method: 'POST',
-        body: formData,
+        body: video_file,
       });
 
       if (uploadResponse.ok) {
@@ -83,7 +78,33 @@ const HomeRoute = ({ showModal, setShowModal }) => {
               isLoading: false,
             });
 
-            setShowModal(true);
+            const zippedFile = await fetch(`http://127.0.0.1:8000/download/`, {
+              method: 'GET',
+            });
+
+            const downloadBlob = await zippedFile.blob();
+
+            try {
+              const url = window.URL.createObjectURL(downloadBlob);
+
+              // Create an anchor element to facilitate the download
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'generated_clip_cut.zip'); // set the desired download filename and extension
+              document.body.appendChild(link);
+
+              // Programmatically click the link to start the download
+              link.click();
+
+              // Clean up by removing the link
+              document.body.removeChild(link);
+
+              toast.success('Downloaded!', TOAST_PROPS);
+            } catch (error) {
+              toast.error('Error downloading!', TOAST_PROPS);
+            }
+
+            // setShowModal(true);
           } else {
             toast.update(promiseToastForProcess, {
               ...TOAST_PROPS,
@@ -112,6 +133,15 @@ const HomeRoute = ({ showModal, setShowModal }) => {
       toast.dismiss();
       toast.error('Error: ' + error, TOAST_PROPS);
     }
+  };
+
+  const handleSubmit = async () => {
+    if (!video) return;
+
+    const formData = new FormData();
+    formData.append('file', video);
+
+    handleUpload(formData);
   };
 
   const onDragOver = (e) => {
@@ -161,6 +191,11 @@ const HomeRoute = ({ showModal, setShowModal }) => {
         const blob = new Blob(chunks, { type: 'video/webm' });
         videoRef.current.src = URL.createObjectURL(blob);
         chunks = []; // Clear the chunks for next recording
+
+        const formData = new FormData();
+        formData.append('file', blob);
+
+        handleUpload(formData);
       };
 
       videoRef.current.srcObject = stream;
