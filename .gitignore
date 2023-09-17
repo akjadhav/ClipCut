@@ -16,3 +16,5 @@ pyvenv.cfg
 __pycache__/
 backend/gpt-api-key.txt
 .env
+backend/uploads.zip
+backend/uploads/recordedVideo.webm
