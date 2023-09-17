@@ -14,7 +14,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,17 +21,19 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  margin: 0;
+  height: 100vh;
+  font-family: 'Arial', sans-serif;
+  animation: pulsateBackground 8s ease-in-out infinite;
+  background-size: 400% 400%;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes pulsateBackground {
+  0%,
+  100% {
+    background-color: #00494d;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-color: #006a70;
   }
 }
