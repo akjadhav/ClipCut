@@ -1,12 +1,25 @@
+import { useState } from 'react';
+
+import DownloadModal from './components/download-modal/download-modal.component';
+
 import HomeRoute from './routes/home/home.route';
 
 import './App.css';
 
 function App() {
+  const [showDownloadModal, setShowDownloadModal] = useState(true);
+
   return (
     <div className='App'>
       <header className='App-header'>
-        <HomeRoute />
+        <DownloadModal
+          showModal={showDownloadModal}
+          setShowModal={setShowDownloadModal}
+        />
+        <HomeRoute
+          showModal={showDownloadModal}
+          setShowModal={setShowDownloadModal}
+        />
       </header>
     </div>
   );

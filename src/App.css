@@ -2,19 +2,7 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +10,6 @@
   font-size: calc(10px + 2vmin);
   color: white;
   margin: 0;
-  height: 100vh;
   font-family: 'Arial', sans-serif;
   animation: pulsateBackground 8s ease-in-out infinite;
   background-size: 400% 400%;
