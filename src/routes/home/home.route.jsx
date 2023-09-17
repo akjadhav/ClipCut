@@ -71,7 +71,7 @@ const HomeRoute = () => {
             isLoading: false,
           });
           const transcribeFilesResponse = await fetch(
-            `http://127.0.0.1:8000/transcribefiles/?foldername=${processResponse.foldername}`,
+            `http://127.0.0.1:8000/transcribefiles/`,
             {
               method: 'GET',
             }
