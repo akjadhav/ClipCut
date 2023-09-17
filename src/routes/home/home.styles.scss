@@ -1,130 +1,152 @@
-.video-upload-container {
+.app-container {
+  // Assuming you want a full viewport height container to manage centering and layout
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px;
-  border-radius: 10px;
-  width: 400px;
-  margin: 50px auto;
-  background-color: #f5f5f5;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  height: 100vh;
+  position: relative; // To make sure the title can be absolutely positioned
 
-  .tab-bar {
-    display: flex;
-    width: 100%;
-    border-bottom: 3px solid #ccc;
-    margin-bottom: 25px;
-
-    button {
-      flex: 1;
-      padding: 10px 0;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: #888;
-      font-size: 16px;
-      transition: border-color 0.3s, color 0.3s;
-      cursor: pointer;
-      font-weight: 500;
-      outline: none;
-
-      &.active {
-        color: #3498db;
-        border-bottom-color: #3498db;
-      }
-
-      &:hover {
-        color: #fff; // Setting the text color to white during hover
-        background-color: #2980b9; // Adding a background color for contrast
-        border-bottom-color: #2980b9; // Keeping the border color for consistency
-      }
-    }
+  .product-title {
+    position: absolute;
+    top: 50px; // You can adjust this to place the title as desired
+    font-size: 2em;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    filter: drop-shadow(0 0 1rem black);
+    z-index: 1; // Ensuring it floats above the rest of the content
   }
 
-  .upload-container,
-  .record-container {
-    width: 100%;
+  .video-upload-container {
+    z-index: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    margin: 50px auto;
+    background-color: #f5f5f5;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 
-    .drop-zone {
-      width: 100%;
-      height: 200px;
+    .tab-bar {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px dashed #ccc;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      position: relative;
-      transition: border-color 0.3s, background-color 0.3s, color 0.3s;
-      cursor: pointer;
-      background: #f7f7f7;
-      color: black;
+      width: 100%;
+      border-bottom: 3px solid #ccc;
+      margin-bottom: 25px;
 
-      &.highlight {
-        border-color: #2980b9;
-        background-color: #eef5f9;
-      }
-
-      &:hover {
-        border-color: #2980b9;
-        background-color: #eef5f9;
-      }
-
-      .file-input {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        cursor: pointer;
-      }
-
-      p {
-        font-size: 1.3em;
+      button {
+        flex: 1;
+        padding: 10px 0;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
         color: #888;
+        font-size: 16px;
+        transition: border-color 0.3s, color 0.3s;
+        cursor: pointer;
         font-weight: 500;
-        text-align: center;
-        margin: 0; // Remove default paragraph margins
-        transition: color 0.3s;
+        outline: none;
 
-        &.highlight, // Assuming you'd like the same styles when highlighted
-          &:hover {
-          color: #2980b9;
+        &.active {
+          color: #3498db;
+          border-bottom-color: #3498db;
+        }
+
+        &:hover {
+          color: #fff; // Setting the text color to white during hover
+          background-color: #2980b9; // Adding a background color for contrast
+          border-bottom-color: #2980b9; // Keeping the border color for consistency
         }
       }
     }
 
-    video {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      background: #fff;
+    .upload-container,
+    .record-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .drop-zone {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        position: relative;
+        transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        cursor: pointer;
+        background: #f7f7f7;
+        color: black;
+
+        &.highlight {
+          border-color: #2980b9;
+          background-color: #eef5f9;
+        }
+
+        &:hover {
+          border-color: #2980b9;
+          background-color: #eef5f9;
+        }
+
+        .file-input {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        p {
+          font-size: 1.3em;
+          color: #888;
+          font-weight: 500;
+          text-align: center;
+          margin: 0; // Remove default paragraph margins
+          transition: color 0.3s;
+
+          &.highlight, // Assuming you'd like the same styles when highlighted
+            &:hover {
+            color: #2980b9;
+          }
+        }
+      }
+
+      video {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        background: #fff;
+      }
     }
-  }
 
-  button {
-    padding: 10px 30px;
-    background-color: #3498db;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    font-weight: 600;
-    transition: background-color 0.3s, transform 0.2s;
-    cursor: pointer;
-    outline: none;
+    button {
+      padding: 10px 30px;
+      background-color: #3498db;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: 600;
+      transition: background-color 0.3s, transform 0.2s;
+      cursor: pointer;
+      outline: none;
 
-    &:hover {
-      background-color: #2980b9;
-      transform: scale(1.05);
-    }
+      &:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+      }
 
-    &:disabled {
-      background-color: #bdc3c7;
-      cursor: not-allowed;
+      &:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+      }
     }
   }
 }

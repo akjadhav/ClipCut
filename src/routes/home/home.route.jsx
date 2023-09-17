@@ -103,58 +103,81 @@ const HomeRoute = () => {
         }
     };
 
-    return (
-        <div className="video-upload-container">
-            <div className="tab-bar">
-                <button
-                    onClick={() => setActiveTab("upload")}
-                    className={activeTab === "upload" ? "active" : ""}
-                >
-                    Upload
-                </button>
-                <button
-                    onClick={() => setActiveTab("record")}
-                    className={activeTab === "record" ? "active" : ""}
-                >
-                    Record
-                </button>
-            </div>
+  return (
+    <>
+      <div className='app-container'>
+        <h1 className='product-title'>ClipCut</h1>
 
-            {activeTab === "upload" ? (
-                <div className="upload-container">
-                    <div
-                        className={`drop-zone ${highlight ? "highlight" : ""}`}
-                        onDragOver={onDragOver}
-                        onDragLeave={onDragLeave}
-                        onDrop={onDrop}
-                    >
-                        Drag & Drop or Click to Upload
-                        <input
-                            type="file"
-                            accept="video/*"
-                            onChange={handleVideoChange}
-                            className="file-input"
-                        />
-                    </div>
-                    <button onClick={handleSubmit} disabled={!video}>
-                        Upload
-                    </button>
-                </div>
-            ) : (
-                <div className="record-container">
+        <div className='video-upload-container'>
+          <div className='tab-bar'>
+            <button
+              onClick={() => setActiveTab('upload')}
+              className={activeTab === 'upload' ? 'active' : ''}>
+              Upload
+            </button>
+            <button
+              onClick={() => setActiveTab('record')}
+              className={activeTab === 'record' ? 'active' : ''}>
+              Record
+            </button>
+          </div>
+
+          {activeTab === 'upload' ? (
+            <div className='upload-container'>
+              <div
+                className={`drop-zone ${highlight ? 'highlight' : ''}`}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}>
+                {video ? (
+                  <>
+                    {/* Displaying the video itself */}
                     <video
-                        ref={videoRef}
-                        width="320"
-                        height="240"
-                        controls
-                    ></video>
-                    <button onClick={handleRecord}>
-                        {recording ? "Stop Recording" : "Start Recording"}
-                    </button>
-                </div>
-            )}
+                      width='320'
+                      height='240'
+                      controls>
+                      <source
+                        src={URL.createObjectURL(video)}
+                        type='video/mp4'
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                    {/* Displaying the video name if you'd prefer that */}
+                    {/* <p>{video.name}</p> */}
+                  </>
+                ) : (
+                  <>Drag & Drop or Click to Upload</>
+                )}
+
+                <input
+                  type='file'
+                  accept='video/*'
+                  onChange={handleVideoChange}
+                  className='file-input'
+                />
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={!video}>
+                Upload
+              </button>
+            </div>
+          ) : (
+            <div className='record-container'>
+              <video
+                ref={videoRef}
+                width='320'
+                height='240'
+                controls></video>
+              <button onClick={handleRecord}>
+                {recording ? 'Stop Recording' : 'Start Recording'}
+              </button>
+            </div>
+          )}
         </div>
-    );
+      </div>
+    </>
+  );
 };
 
 export default HomeRoute;
