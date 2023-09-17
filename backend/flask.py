@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import FastAPI, File, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from test_scene import process_file
-from utils import transcribe
+from utils import transcribe, get_sentiment
 from fastapi.responses import JSONResponse, FileResponse
 import os
 import shutil
@@ -53,6 +53,16 @@ async def transcribe_files():
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"message": f"There was an error transcribing the file: {str(e)}"})
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": "Transcription process started"})
+
+@app.get('/addsentiment')
+async def add_sentiment():
+    text = "" # get text from txt
+    try:
+        sentiment = get_sentiment(text)
+        # 
+        
+    except Exception as e:
+        return e
 
 @app.get("/download/")
 async def download_files():
