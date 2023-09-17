@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
+import ffmpeg from 'ffmpeg.js';
 import { toast } from 'react-toastify';
-import { Form, Button, Modal } from 'react-bootstrap';
 
 import ContainerForToast from '../../components/toast/toast.component';
 import { TOAST_PROPS } from '../../components/toast/toast.settings';
@@ -28,6 +28,10 @@ const HomeRoute = ({ showModal, setShowModal }) => {
   };
 
   const handleUpload = async (video_file) => {
+    console.log(video_file);
+    console.log(video_file.get('file'));
+    console.log(typeof video_file);
+
     try {
       const promiseToastForUpload = toast.loading(
         'Uploading video...',
@@ -192,8 +196,35 @@ const HomeRoute = ({ showModal, setShowModal }) => {
         videoRef.current.src = URL.createObjectURL(blob);
         chunks = []; // Clear the chunks for next recording
 
+        const recordedFile = new File([blob], 'recordedVideo.webm', {
+          type: 'video/webm',
+          lastModified: new Date(),
+        });
+
+        // const file = blob;
+        // const reader = new FileReader();
+        // reader.onload = function (event) {
+        //   const data = new Uint8Array(event.target.result);
+        //   ffmpeg({
+        //     MEMFS: [{ name: 'recordedVideo.webm', data: data }],
+        //     arguments: ['-i', 'recordedVideo.webm', 'recordedVideo.mp4'],
+        //     onExit: function (code) {
+        //       const mp4Data = ffmpeg.FS('readFile', 'recordedVideo.mp4');
+        //       const blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
+        //       const url = URL.createObjectURL(blob);
+        //       // You can use the URL to set it to a video element or offer it for download etc.
+        //     },
+        //   });
+        // };
+        // reader.readAsArrayBuffer(file);
+
+        // const recordedFile = new File([blob], 'recordedVideo.MP4', {
+        //   type: 'video/mp4',
+        //   lastModified: new Date(),
+        // });
+
         const formData = new FormData();
-        formData.append('file', blob);
+        formData.append('file', recordedFile);
 
         handleUpload(formData);
       };
