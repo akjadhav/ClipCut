@@ -94,6 +94,7 @@ const HomeRoute = () => {
         });
       }
     } catch (error) {
+      toast.dismiss();
       toast.error('Error: ' + error, TOAST_PROPS);
     }
   };
