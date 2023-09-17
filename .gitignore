@@ -10,3 +10,4 @@ pyvenv.cfg
 *.mp4
 
 __pycache__/
+backend/gpt-api-key.txt

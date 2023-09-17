@@ -4,8 +4,7 @@ from moviepy.editor import VideoFileClip
 import os
 import json
 
-#openai.api_key_path = 'PATH'
-openai.api_key = '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'
+openai.api_key_path = 'gpt-api-key.txt'
 
 #NOT USED
 def upload_video_google(file_path_to_upload):
