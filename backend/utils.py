@@ -73,12 +73,12 @@ def get_video_transcript(video_path):
 
 def save_transcript(transcript, name):
     json_object = json.dumps(transcript, indent=4)
-    file_path = os.path.join("uploads", name+'.txt')
+    file_path = os.path.join("uploads", name+'.json')
     with open(file_path, 'w') as file:
         file.write(json_object)
 
 
-def transcribe(uploaded_video_path):
+async def transcribe(uploaded_video_path):
     uploads_dir = "uploads"
     for file_name in os.listdir(uploads_dir):
         if "Scene" in file_name:
@@ -99,13 +99,9 @@ def get_sentiment(text):
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=f"Sentiment analysis of the following text, in one word:\n{text}\n",
-        temperature=1.75,
-        max_tokens=1,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
-        stop=["\n"]
+        temperature=0.5,
+        max_tokens=2,
     )
-
     sentiment = response.choices[0].text.strip()
+    print(sentiment)
     return sentiment

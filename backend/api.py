@@ -48,7 +48,7 @@ async def process_video_file(file_name: str):
 @app.get("/transcribefiles/")
 async def transcribe_files():
     try:
-        transcribe('uploads')
+        await transcribe('uploads')
     except Exception as e:
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"message": f"There was an error transcribing the file: {str(e)}"})
 
