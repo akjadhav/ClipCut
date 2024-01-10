@@ -1,5 +1,7 @@
 # ClipCut
 
+Built for HackMIT 2023
+
 ## Inspiration
 
 As fans of films and being part of the generation that grew up with much of its video entertainment deriving from the internet, we were always drawn to video as a medium for personal expression. That being said, the industry has been hit with copious amounts of criticisms lately. While the public is currently aware of the mistreatment of entertainment employees with the actors' and writers' strikes, they are still vastly aware of the undercompensation, mistreatment, and overworking of the people behind the scene.
